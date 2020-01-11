@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const logger = require("../../../../utils/logger");
-const User = require("../../../../db/models/User");
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
+const logger = requireFromBase("utils/logger");
+const User = requireFromBase("db/models/User");
 
 /**
  * returns list of all users paginated with skip and limit parameters

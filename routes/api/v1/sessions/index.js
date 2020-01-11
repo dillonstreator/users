@@ -1,10 +1,9 @@
+const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../../../../db/models/User");
 const { check, validationResult } = require("express-validator");
+const User = requireFromBase("db/models/User");
 const logger = requireFromBase("utils/logger");
-
-const router = require("express").Router();
 
 const ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
