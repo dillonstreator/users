@@ -1,17 +1,18 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const logger = require("../utils/logger");
 
-module.exports = (req, res, next) => {
+module.exports = (req, _, next) => {
    req.user = null;
-   const token = req.cookies[process.env.AUTH_COOKIE_KEY];
+   const token =
+      req.cookies[process.env.AUTH_KEY] || req.header(process.env.AUTH_KEY);
 
    if (!token) return next();
    try {
       const user = jwt.verify(token, process.env.SECRET);
+      logger.info(user);
       req.user = user;
    } catch (error) {
-      logger.error(error, { req });
+      logger.error(error);
    } finally {
       next();
    }

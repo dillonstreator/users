@@ -1,6 +1,11 @@
+const rTracer = require("cls-rtracer");
+
+const printId = () => {
+   const id = rTracer.id();
+   return id ? `[${id}]` : "";
+};
+
 module.exports = {
-   debug: msg => console.debug(msg),
-   warn: msg => console.warn(msg),
-   error: msg => console.error(msg),
-   info: msg => console.info(msg)
+   error: msg => console.error(`[ ERROR ]${printId()}`, msg),
+   info: msg => console.info(`[ INFO  ]${printId()}`, msg)
 };
