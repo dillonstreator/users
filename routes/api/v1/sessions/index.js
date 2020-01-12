@@ -6,8 +6,8 @@ const rateLimit = require("express-rate-limit");
 const User = rootRequire("db/models/User");
 const logger = rootRequire("utils/logger");
 
-const ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-const THIRTY_MINUTES_IN_MILLIS = 30 * 60 * 1000;
+const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+const THIRTY_MINUTES_IN_MILLIS = 1000 * 60 * 30;
 
 const loginLimiter = rateLimit({
    windowMs: THIRTY_MINUTES_IN_MILLIS,
@@ -61,7 +61,7 @@ router.post(
             },
             process.env.SECRET,
             {
-               expiresIn: 5
+               expiresIn: ONE_DAY_IN_SECONDS
             }
          );
          res.cookie(process.env.AUTH_KEY, token, {
