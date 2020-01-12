@@ -1,4 +1,4 @@
-const logger = requireFromBase("utils/logger");
+const logger = rootRequire("utils/logger");
 
 module.exports = (...roles) => {
    return (req, res, next) => {

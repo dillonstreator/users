@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
-const logger = requireFromBase("utils/logger");
-const User = requireFromBase("db/models/User");
-const requireRole = requireFromBase("middlewares/requireRole");
+const logger = rootRequire("utils/logger");
+const User = rootRequire("db/models/User");
+const requireRole = rootRequire("middlewares/requireRole");
 
 router.get("/", requireRole(User.ROLES.ADMIN), async (req, res) => {
    const { skip = 0, limit = 10 } = req.query;

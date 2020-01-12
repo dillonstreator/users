@@ -7,17 +7,23 @@ const logger = require("./utils/logger");
 
 const app = express();
 
-app.use(helmet());
 app.use(rTracer.expressMiddleware());
+app.use((req, res, next) => {
+   logger.info(`${req.method} ${req.url}`);
+   const startHrTime = process.hrtime();
+   res.on("finish", () => {
+      const elapsedHrTime = process.hrtime(startHrTime);
+      const elapsedTimeInMs = elapsedHrTime[0] * 1000 + elapsedHrTime[1] / 1e6;
+      logger.info(`elapsed request time: ${elapsedTimeInMs}ms`);
+   });
+   next();
+});
+
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(require("./middlewares/extractUser"));
-
-app.use((req, _, next) => {
-   logger.info(`${req.method} ${req.url}`);
-   next();
-});
 
 app.use(require("./routes"));
 

@@ -3,8 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const rateLimit = require("express-rate-limit");
-const User = requireFromBase("db/models/User");
-const logger = requireFromBase("utils/logger");
+const User = rootRequire("db/models/User");
+const logger = rootRequire("utils/logger");
 
 const ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 const THIRTY_MINUTES_IN_MILLIS = 30 * 60 * 1000;
@@ -59,11 +59,13 @@ router.post(
                id: user.id,
                email: user.email
             },
-            process.env.SECRET
+            process.env.SECRET,
+            {
+               expiresIn: 5
+            }
          );
          res.cookie(process.env.AUTH_KEY, token, {
-            httpOnly: true,
-            expires: ONE_DAY_IN_MILLIS
+            httpOnly: true
          });
          return res.status(200).json({ token });
       } catch (error) {
