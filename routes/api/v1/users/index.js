@@ -5,9 +5,6 @@ const logger = requireFromBase("utils/logger");
 const User = requireFromBase("db/models/User");
 const requireRole = requireFromBase("middlewares/requireRole");
 
-/**
- * returns list of all users paginatable with skip and limit parameters
- */
 router.get("/", requireRole(User.ROLES.ADMIN), async (req, res) => {
    const { skip = 0, limit = 10 } = req.query;
    const tooManyUsersRequested = limit > process.env.MAX_USER_RETRIEVAL;
@@ -16,9 +13,14 @@ router.get("/", requireRole(User.ROLES.ADMIN), async (req, res) => {
          message: `Maximum user retrieval per page is ${process.env.MAX_USER_RETRIEVAL}. The 'limit' query parameter must not exceed this value.`
       });
 
-   const users = await User.find({}, null, { skip: +skip, limit: +limit });
+   try {
+      const users = await User.find({}, null, { skip: +skip, limit: +limit });
 
-   return res.status(200).json(users);
+      return res.status(200).json(users);
+   } catch (error) {
+      logger.error(error);
+      return res.sendStatus(500);
+   }
 });
 
 router.post(
@@ -56,7 +58,6 @@ router.post(
 );
 
 router.patch("/:id", (req, res) => {});
-
 router.delete("/:id", (req, res) => {});
 
 module.exports = router;

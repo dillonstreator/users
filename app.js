@@ -16,7 +16,6 @@ app.use(require("./middlewares/extractUser"));
 
 app.use((req, _, next) => {
    logger.info(`${req.method} ${req.url}`);
-
    next();
 });
 

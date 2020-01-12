@@ -9,7 +9,6 @@ module.exports = (req, _, next) => {
    if (!token) return next();
    try {
       const user = jwt.verify(token, process.env.SECRET);
-      logger.info(user);
       req.user = user;
    } catch (error) {
       logger.error(error);

@@ -10,7 +10,7 @@ const ONE_DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 const THIRTY_MINUTES_IN_MILLIS = 30 * 60 * 1000;
 
 const loginLimiter = rateLimit({
-   windowMs: THIRTY_MINUTES_IN_MILLIS, // 30 minutes
+   windowMs: THIRTY_MINUTES_IN_MILLIS,
    max: 100
 });
 
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
    try {
       if (!req.user)
          return res.status(404).json({ message: "no current session" });
-      else return res.send({ ...req.user });
+      else return res.json(req.user);
    } catch (error) {
       logger.error(error);
       return res.sendStatus(500);
