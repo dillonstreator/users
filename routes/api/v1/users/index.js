@@ -3,11 +3,12 @@ const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 const logger = requireFromBase("utils/logger");
 const User = requireFromBase("db/models/User");
+const requireRole = requireFromBase("middlewares/requireRole");
 
 /**
- * returns list of all users paginated with skip and limit parameters
+ * returns list of all users paginatable with skip and limit parameters
  */
-router.get("/", (req, res) => {
+router.get("/", requireRole(User.ROLES.ADMIN), async (req, res) => {
    const { skip = 0, limit = 10 } = req.query;
    const tooManyUsersRequested = limit > process.env.MAX_USER_RETRIEVAL;
    if (tooManyUsersRequested)
@@ -15,9 +16,9 @@ router.get("/", (req, res) => {
          message: `Maximum user retrieval per page is ${process.env.MAX_USER_RETRIEVAL}. The 'limit' query parameter must not exceed this value.`
       });
 
-   // TODO: query users
+   const users = await User.find({}, null, { skip: +skip, limit: +limit });
 
-   return res.status(200).send("users");
+   return res.status(200).json(users);
 });
 
 router.post(
